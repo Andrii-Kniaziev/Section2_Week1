@@ -12,6 +12,8 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap:
     h <- frequency((1, Gen.const(empty)), (9, genHeap))
   } yield insert(n, h)
 
+  given Arbitrary[H] = Arbitrary(genHeap)
+
   property("The smallest of 2 elements should be the smallest in a previously empty Heap") = forAll { (n1: A, n2: A) =>
     val h = insert(n1, insert(n2, empty))
     findMin(h) == min(n1, n2)
@@ -56,6 +58,6 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap:
     findMin(meld(deleteMin(h1), insert(m, h2))) == m
   }
 
-  implicit lazy val arbHeap: Arbitrary[H] = Arbitrary(genHeap)
+
 
 
