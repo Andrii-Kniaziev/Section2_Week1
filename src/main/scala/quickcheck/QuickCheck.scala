@@ -3,7 +3,7 @@ package quickcheck
 import org.scalacheck.*
 import Arbitrary.*
 import Gen.*
-import Prop.{forAll, propBoolean}
+import Prop.forAll
 import Math.min
 
 abstract class QuickCheckHeap extends Properties("Heap") with IntHeap:
@@ -13,6 +13,11 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap:
   } yield insert(n, h)
 
   given Arbitrary[H] = Arbitrary(genHeap)
+
+  property("gen1") = forAll { (h: H) =>
+    val m = if isEmpty(h) then 0 else findMin(h)
+    findMin(insert(m, h)) == m
+  }
 
   property("The smallest of 2 elements should be the smallest in a previously empty Heap") = forAll { (n1: A, n2: A) =>
     val h = insert(n1, insert(n2, empty))
@@ -57,7 +62,4 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap:
     val m = min(m1,m2)
     findMin(meld(deleteMin(h1), insert(m, h2))) == m
   }
-
-
-
 
